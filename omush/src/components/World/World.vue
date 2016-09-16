@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import DisplayMessageFactory from './DisplayMessageFactory'
 import OutputWindow from './OutputWindow'
 import InputWindow from './InputWindow'
 
@@ -25,10 +26,18 @@ export default {
   computed: {
   },
   methods: {
+    displayMessage: function (msg) {
+      console.log(typeof msg)
+      this.$broadcast('displayMessage', msg)
+    }
+  },
+  ready () {
+    let dMsg = DisplayMessageFactory.systemMessage('Trying to connect...')
+    this.displayMessage(dMsg)
   },
   events: {
     'sendInput': function (msg) {
-      this.$broadcast('displayMessage', { string: msg, type: 'input' })
+      this.displayMessage(DisplayMessageFactory.localEchoMessage(msg))
     }
   }
 }

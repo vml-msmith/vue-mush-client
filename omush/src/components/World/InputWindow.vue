@@ -35,5 +35,6 @@ textarea {
   background: black;
   border: 0;
   color: #fff;
+  width: 100%;
 }
 </style>
