@@ -24,6 +24,11 @@ export default {
         this.history.push(msg)
       }
     }
+  },
+  watch: {
+    'history': function (val) {
+      this.$el.scrollTop = this.$el.scrollHeight
+    }
   }
 }
 </script>
