@@ -1,0 +1,13 @@
+# docker-compose.yml
+
+version: '2'
+services:
+  omush_client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - "../:/var/www"
+    ports:
+      - "80"
+      - "22"
