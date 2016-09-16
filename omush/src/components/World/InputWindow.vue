@@ -1,6 +1,6 @@
 <template>
 <div class="input-window inner-window">
-<textarea v-model="input" v-on:keyup.enter="submit"></textarea>
+  <textarea v-model="input" v-on:keydown="keypress" v-on:keydown.enter.prevent="submit"></textarea>
 </div>
 </template>
 
@@ -8,16 +8,99 @@
 export default {
   data () {
     return {
-      input: ''
+      input: '',
+      history: [],
+      historyIndex: null
     }
   },
 
   methods: {
     submit: function () {
+      if (this.input.trim().length === 0) {
+        return
+      }
       let input = this.input
+      this.history.push(input)
+      this.historyIndex = null
       this.input = ''
       this.$dispatch('sendInput', input)
-      console.log('Dispatch')
+    },
+
+    keypress: function (e) {
+      if (e.key === 'ArrowUp') {
+        this.arrowUp(e)
+      } else
+      if (e.key === 'ArrowDown') {
+        this.arrowDown(e)
+      }
+    },
+
+    arrowUp: function (e) {
+      if (this.history.length === 0) {
+        return
+      }
+
+      if (this.isInputAtEnd(e) === false) {
+        return
+      }
+
+      this.decrementHistoryIndex()
+      this.setInput(e.target, this.getHistoryByIndex())
+    },
+
+    arrowDown: function (e) {
+      if (this.historyIndex === null) {
+        return
+      }
+
+      if (this.isInputAtEnd(e) === false) {
+        return
+      }
+
+      this.incrementHistoryIndex()
+      this.setInput(e.target, this.getHistoryByIndex())
+    },
+
+    isInputAtEnd: function (e) {
+      if (e.target.selectionStart === e.target.selectionEnd) {
+        return e.target.selectionStart === e.target.textLength
+      }
+      return false
+    },
+
+    decrementHistoryIndex: function () {
+      if (this.historyIndex === null) {
+        this.historyIndex = this.history.length
+      }
+
+      if (this.historyIndex !== 0) {
+        --this.historyIndex
+      }
+    },
+
+    incrementHistoryIndex: function () {
+      if (this.historyIndex === this.history.length - 1) {
+        this.historyIndex = null
+        return
+      }
+
+      ++this.historyIndex
+    },
+
+    getHistoryByIndex: function () {
+      if (this.historyIndex === null) {
+        return ''
+      }
+
+      return this.history[this.historyIndex]
+    },
+
+    setInput: function (target, string) {
+      this.input = string
+      target.value = string
+      target.selectionStart = target.value.length
+      target.selectionStart = target.value.length
+      setTimeout(function () { target.selectionStart = target.selectionEnd = target.value.length }, 0)
     }
   }
 
