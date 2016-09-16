@@ -1,9 +1,10 @@
 <template>
-  <form>
-  <label>Hostname:</label>
-  <input :placeholder="defaultHost" type="text">
-  <label>Port:</label>
-  <input :placeholder="defaultPort" type="text">
+  <form v-on:submit.prevent="tryToSubmit">
+    <label>Hostname:</label>
+    <input :placeholder="defaultHost" type="text" v-model="host">
+    <label>Port:</label>
+    <input :placeholder="defaultPort" type="text" v-model="port" number>
+    <input type="submit" value="Connect">
   </form>
 </template>
 
@@ -17,7 +18,33 @@ export default {
       // its initial state.
       msg: 'Hello World!',
       defaultPort: 1701,
-      defaultHost: 'locaalhost'
+      defaultHost: 'localhost',
+      host: '',
+      port: null
+    }
+  },
+  computed: {
+    connectHost: function () {
+      if (this.host.length === 0) {
+        return this.defaultHost
+      }
+
+      return this.host
+    },
+    connectPort: function () {
+      if (this.port === null) {
+        return this.defaultPort
+      }
+
+      return this.port
+    }
+  },
+  methods: {
+    tryToSubmit () {
+      let port = this.connectPort
+      let host = this.connectHost
+
+      this.$dispatch('tryOpenConnection', {port: port, host: host})
     }
   }
 }
@@ -25,7 +52,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1 {
-  color: #42b983;
-}
 </style>
