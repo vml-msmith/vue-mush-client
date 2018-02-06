@@ -1,7 +1,7 @@
 <template>
 <div class="output-window inner-window">
   <div v-for="msg in history" class="message {{msg.getType()}}">
-  {{ msg.getString() }}
+  <span v-html="msg.getString()"></span>
   </div>
 </div>
 </template>
@@ -23,6 +23,10 @@ export default {
          typeof msg.getType === 'function') {
         this.history.push(msg)
       }
+      var max = 2000
+      if (this.history != null && this.history.length > max) {
+        this.history = this.history.slice(max / 2)
+      }
     }
   },
   watch: {
@@ -37,7 +41,7 @@ export default {
 .output-window {
   background: black;
   min-height: 600px;
-  max-height: 600px;
+  max-height: 750px;
   overflow-y: scroll;
 }
 .message.localEcho {

@@ -119,5 +119,7 @@ textarea {
   border: 0;
   color: #fff;
   width: 100%;
+  font-size: 14px;
+  font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera;
 }
 </style>

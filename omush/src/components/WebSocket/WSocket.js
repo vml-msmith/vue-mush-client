@@ -5,10 +5,18 @@ let _port = Symbol()
 let _socket = Symbol()
 let _listeners = Symbol()
 let _queuedMessages = Symbol()
+let _readyState = Symbol()
+
+const CONNECTING = 0
+const OPEN = 1
+// const CLOSING = 2
+const CLOSED = 3
 
 function _getSocket (obj) {
   let socket = obj[_socket]
   if (socket === null) {
+    obj[_readyState] = CONNECTING
+
     let host = obj[_host]
     let port = obj[_port]
 
@@ -16,17 +24,21 @@ function _getSocket (obj) {
     obj[_socket] = socket
 
     socket.onerror = function (e) {
+      obj[_readyState] = CLOSED
       _dispatchMessageToListeners(obj, {
         event: 'error',
         message: 'Connection Error'
       })
+      obj[_socket] = null
     }
 
     socket.onclose = function (e) {
+      obj[_readyState] = CLOSED
       _dispatchMessageToListeners(obj, {
         event: 'close',
         message: 'Connection Closed'
       })
+      obj[_socket] = null
     }
 
     socket.onopen = function (e) {
@@ -34,16 +46,18 @@ function _getSocket (obj) {
         event: 'open',
         message: 'Connection Opened'
       })
+      obj[_readyState] = OPEN
+      _processSendQueue(obj)
     }
 
     socket.onmessage = function (e) {
-      console.log(e)
-
       _dispatchMessageToListeners(obj, {
         event: 'message',
         message: e
       })
     }
+  } else {
+    obj[_socket].open(true)
   }
 
   return socket
@@ -63,6 +77,13 @@ function _dispatchMessage (listener, message) {
   listener.onSocketMessage(message)
 }
 
+function _processSendQueue (obj) {
+  while (obj[_queuedMessages].length > 0) {
+    let msg = obj[_queuedMessages].pop()
+    obj[_socket].send(msg)
+  }
+}
+
 export class WSocket {
   constructor (host, port) {
     this[_host] = host
@@ -70,6 +91,7 @@ export class WSocket {
     this[_socket] = null
     this[_listeners] = []
     this[_queuedMessages] = []
+    this[_readyState] = CLOSED
   }
 
   registerListener (listener) {
@@ -83,11 +105,12 @@ export class WSocket {
   send (message) {
     this[_queuedMessages].push(message)
 
-    if (this[_socket].readyState === this[_socket].OPEN) {
-      while (this[_queuedMessages].length > 0) {
-        let msg = this[_queuedMessages].pop()
-        this[_socket].send(msg)
-      }
+    let readyState = this[_readyState]
+
+    if (readyState === OPEN) {
+      _processSendQueue(this)
+    } else if (this[_readyState] === CLOSED) {
+      this.connect()
     }
   }
 

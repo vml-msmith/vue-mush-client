@@ -32,9 +32,7 @@ export default {
   events: {
     'tryOpenConnection': function (msg) {
       this.worlds.push(msg)
-      if (this.activeWorld === null) {
-        this.activeWorld = 0
-      }
+      this.selectWorld(this.worlds.length - 1)
     }
   }
 }

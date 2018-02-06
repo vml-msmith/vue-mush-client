@@ -77,7 +77,7 @@ export default {
             DisplayMessageFactory.message(event.message.data))
           break
         default:
-          console.log('Default message: ' + event.message)
+          // console.log('Default message: ' + event.message)
           break
       }
     }
