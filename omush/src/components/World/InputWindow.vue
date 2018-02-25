@@ -23,6 +23,7 @@ export default {
       this.history.push(input)
       this.historyIndex = null
       this.input = ''
+
       this.$dispatch('sendInput', input)
     },
 
@@ -111,7 +112,7 @@ export default {
 .input-window {
   background: black;
   min-height: 18px;
-  color: #fff;
+  color: lightgray;
 }
 
 textarea {
@@ -121,5 +122,10 @@ textarea {
   width: 100%;
   font-size: 14px;
   font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera;
+  height: 180px;
+}
+
+textarea:focus {
+  outline: 0;
 }
 </style>

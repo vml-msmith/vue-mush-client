@@ -20,7 +20,7 @@ function _getSocket (obj) {
     let host = obj[_host]
     let port = obj[_port]
 
-    socket = new W3CWebSocket('ws://' + host + ':' + port)
+    socket = new W3CWebSocket('ws://' + host + ':' + port + '/wsclient')
     obj[_socket] = socket
 
     socket.onerror = function (e) {
@@ -80,7 +80,8 @@ function _dispatchMessage (listener, message) {
 function _processSendQueue (obj) {
   while (obj[_queuedMessages].length > 0) {
     let msg = obj[_queuedMessages].pop()
-    obj[_socket].send(msg)
+
+    obj[_socket].send('t' + msg + '\r\n')
   }
 }
 

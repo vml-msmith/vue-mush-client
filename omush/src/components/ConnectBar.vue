@@ -16,9 +16,9 @@ export default {
       // with hot-reload because the reloaded component
       // preserves its current state and we are modifying
       // its initial state.
-      msg: 'Hello World!',
+      msg: '',
       defaultPort: 1701,
-      defaultHost: 'localhost',
+      defaultHost: 'tos.trekmush.net',
       host: '',
       port: null
     }

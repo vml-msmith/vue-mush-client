@@ -1,5 +1,6 @@
 <template>
-<div class="output-window inner-window">
+<div class="dynamic-window inner-window">
+{{ id }}
   <div v-for="msg in history" class="message {{msg.getType()}}">
   {{{ msg.getString() }}}
   </div>
@@ -7,6 +8,8 @@
 </template>
 
 <script>
+import DisplayMessageFactory from './DisplayMessageFactory'
+
 export default {
   data () {
     return {
@@ -14,15 +17,30 @@ export default {
     }
   },
 
-  methods: {
-  },
+  props: [
+    'id'
+  ],
 
   events: {
-    'displayMessage': function (msg) {
-      if (typeof msg.getString === 'function' &&
-         typeof msg.getType === 'function') {
-        this.history.push(msg)
+    'windowUpdate': function (id, json) {
+      if (id !== this.id) {
+        return
       }
+      let action = json.action
+      console.log('Action ' + action)
+      switch (action) {
+        case 'draw':
+          console.log('draw')
+          this.history = []
+          this.history.push(DisplayMessageFactory.message(json.data))
+          break
+        case 'clear':
+          this.history = []
+          break
+        default:
+          break
+      }
+
       var max = 2000
       if (this.history != null && this.history.length > max) {
         this.history = this.history.slice(max / 2)
@@ -38,11 +56,10 @@ export default {
 </script>
 
 <style scoped>
-.output-window {
+.dynamic-window {
   background: black;
-  min-height: 600px;
-  max-height: 750px;
   overflow-y: scroll;
+  width: 685px;
 }
 .message {
   width: 680px;
@@ -52,6 +69,9 @@ export default {
 }
 .message.system {
   color: cyan;
+}
+.message > div{
+  white-space: pre;
 }
 
 
