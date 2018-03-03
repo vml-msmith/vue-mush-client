@@ -116,7 +116,6 @@ export default {
                       json.action !== 'close') {
                     // Create a window.
                     this.windows.push({ _id: json.window })
-                    console.log('Create')
                     window = this.windows.length - 1
                   }
 
@@ -148,7 +147,6 @@ export default {
                      json.action !== 'close') {
                   // Create a window.
                   this.windows.push({ id: json.window })
-                  console.log('Create')
                   window = this.windows.length - 1
                 }
 
@@ -156,7 +154,6 @@ export default {
                     window !== null) {
                   // Destroy the window
                   delete this.windows[window]
-                  console.log('CLOSE')
                 }
                 console.log('Broadcast')
                 this.$broadcast('windowUpdate', json)

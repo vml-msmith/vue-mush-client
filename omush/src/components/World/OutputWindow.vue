@@ -1,5 +1,5 @@
 <template>
-<div class="output-window inner-window">
+<div class="output-window inner-window" roll="log" role="status">
   <div v-for="msg in history" class="message {{msg.getType()}}">
   {{{ msg.getString() }}}
   </div>
@@ -27,8 +27,6 @@ export default {
   },
 
   created () {
-    // this.$el.addEventListener('scroll', this.handleScroll)
-    console.log(this.$el)
   },
 
   events: {
