@@ -10,11 +10,25 @@
 export default {
   data () {
     return {
-      history: []
+      history: [],
+      scrollBottom: 1,
+      setup: 0
     }
   },
 
   methods: {
+    handleScroll () {
+      if (Math.abs((this.$el.scrollHeight - this.$el.offsetHeight) - this.$el.scrollTop) < 1) {
+        this.scrollBottom = 1
+      } else {
+        this.scrollBottom = 0
+      }
+    }
+  },
+
+  created () {
+    // this.$el.addEventListener('scroll', this.handleScroll)
+    console.log(this.$el)
   },
 
   events: {
@@ -31,7 +45,14 @@ export default {
   },
   watch: {
     'history': function (val) {
-      this.$el.scrollTop = this.$el.scrollHeight
+      if (!this.setup) {
+        this.$el.addEventListener('scroll', this.handleScroll)
+        this.setup = 1
+      }
+
+      if (this.scrollBottom) {
+        this.$el.scrollTop = this.$el.scrollHeight
+      }
     }
   }
 }
@@ -40,12 +61,11 @@ export default {
 <style scoped>
 .output-window {
   background: black;
-  min-height: 600px;
-  max-height: 750px;
+  height: 80%;
   overflow-y: scroll;
 }
 .message {
-  width: 680px;
+  width: 100%;
 }
 .message.localEcho {
   color: darkorange;

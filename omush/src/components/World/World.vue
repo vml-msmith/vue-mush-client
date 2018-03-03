@@ -196,8 +196,16 @@ export default {
   background: lightgray;
   position: fixed;
   top: 50px;
-  bottom: 50px;
-  max-width: 690px;
+  bottom: 10px;
+  max-width: 95vw;
+  min-width: 95vw;
+}
+
+@media (min-width: 768px) {
+  .world {
+    max-width: 695px;
+    min-width: 695px;
+  }
 }
 
 .inner-window {

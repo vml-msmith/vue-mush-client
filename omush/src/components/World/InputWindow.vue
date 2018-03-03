@@ -113,6 +113,7 @@ export default {
   background: black;
   min-height: 18px;
   color: lightgray;
+  height: 14%;
 }
 
 textarea {
@@ -122,7 +123,15 @@ textarea {
   width: 100%;
   font-size: 14px;
   font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera;
-  height: 180px;
+  height: 95%;
+
+  font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  textarea {
+    font-size: 14px;
+  }
 }
 
 textarea:focus {

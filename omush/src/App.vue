@@ -50,8 +50,14 @@ body {
 #app {
   color: #0c090A;
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-  font-size: 14px;
+  font-size: 7px;
   position: relative;
+}
+
+@media (min-width: 768px) {
+  #app {
+    font-size: 14px;
+  }
 }
 
 #app a {
